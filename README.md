@@ -223,14 +223,14 @@ Global Options:
 
 `surfacediff` is part of the **Leviathan Offensive Tooling Suite**:
 
-* 🔍 **[surfacediff](https://github.com/leviathan-offsec/surfacediff)** — Diff your attack surface perimeters, not your vanity metrics.
-* 🚀 **[HostageLVX](https://github.com/leviathan-offsec/HostageLVX)** — Lightning-fast dangling DNS & subdomain takeover engine in Go.
-* 🐺 **[FenrirLVX](https://github.com/leviathan-offsec/FenrirLVX)** — Focused Go CLI for WordPress/CMS testing & CVE correlation.
-* ⚖️ **[leviathan-core](https://github.com/leviathan-offsec/leviathan-core)** — Contract-enforced explainable risk scoring kernel (CVSS/EPSS/KEV).
-* 🤖 **[agy-mcp](https://github.com/leviathan-offsec/agy-mcp)** — Path-traversal-hardened FastMCP bridge for autonomous AI agents.
+* 🔍 **[surfacediff](https://github.com/leviathan-offsec/surfacediff)** · Immutable content-addressed snapshotting and perimeter delta diffing.
+* 🚀 **[HostageLVX](https://github.com/leviathan-offsec/HostageLVX)** · High-speed dangling DNS and subdomain takeover engine in Go.
+* 🐺 **[FenrirLVX](https://github.com/leviathan-offsec/FenrirLVX)** · High-speed Go CLI for WordPress/CMS auditing & offline CVE correlation.
+* ⚖️ **[leviathan-core](https://github.com/leviathan-offsec/leviathan-core)** · Contract-enforced vulnerability risk scoring kernel (CVSS/EPSS/KEV).
+* 🤖 **[agy-mcp](https://github.com/leviathan-offsec/agy-mcp)** · Hardened Model Context Protocol (FastMCP) server for AI coding assistants.
 
 ---
 
 ## 📄 License
 
-Licensed under the **MIT License**. Created & maintained by [Chin Yi Zhe (@cyeezy08)](https://github.com/cyeezy08) for [Leviathan OffSec](https://github.com/leviathan-offsec).
+Licensed under the **MIT License**. Created & maintained by [@cyeezy08](https://github.com/cyeezy08) for [Leviathan OffSec](https://leviathan.ac).
