@@ -57,6 +57,34 @@ def list_snapshots(base: str | None, label: str) -> list[str]:
     return sorted(p.name for p in d.glob("*.jsonl"))
 
 
+def prune(base: str | None, label: str, keep: int) -> tuple[list[str], str]:
+    """Delete all but the `keep` newest snapshots for a label.
+
+    Returns (deleted_names, kept_pointer_name). The `current` pointer is
+    repointed at the newest surviving snapshot, and is NEVER deleted — a
+    pruned store that still diffs is the whole point of the command.
+
+    Immutable-by-default is a property of normal operation, not a promise
+    that data can never be reclaimed: a weekly cron job would otherwise grow
+    the store without bound.
+    """
+    if keep < 1:
+        raise ValueError(f"keep must be >= 1 (got {keep})")
+    names = list_snapshots(base, label)
+    if not names:
+        raise ValueError(f"no snapshots for label {label!r}; nothing to prune")
+    doomed = names[:-keep]
+    d = store_dir(base, label)
+    for name in doomed:
+        (d / name).unlink()
+    survivors = names[len(doomed):]
+    ptr = d / config.POINTER_NAME
+    newest = survivors[-1]
+    if not ptr.exists() or ptr.read_text().strip() != newest:
+        ptr.write_text(newest)
+    return doomed, newest
+
+
 def load(base: str | None, label: str, ref: str = "current") -> dict:
     """Load a snapshot by ref: 'current', a filename, or a timestamp prefix.
     Returns {"meta": {...}, "records": {key: record}, "file": name}."""

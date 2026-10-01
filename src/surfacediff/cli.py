@@ -9,7 +9,7 @@ import sys
 from . import __version__, config
 from .diff import diff_records
 from .normalize import parse_stream
-from .store import latest_pair, list_snapshots, load, snap, store_dir
+from .store import latest_pair, list_snapshots, load, prune, snap, store_dir
 
 GREEN, RED, YELLOW, DIM, RESET = "\033[32m", "\033[31m", "\033[33m", "\033[2m", "\033[0m"
 
@@ -116,6 +116,19 @@ def cmd_show(args: argparse.Namespace) -> int:
     return config.EXIT_OK
 
 
+def cmd_prune(args: argparse.Namespace) -> int:
+    try:
+        deleted, kept = prune(args.dir, args.label, args.keep)
+    except ValueError as e:
+        print(f"error: {e}", file=sys.stderr)
+        return config.EXIT_ERROR
+    if not args.silent:
+        for name in deleted:
+            print(f"removed {name}")
+        print(f"kept {args.keep} newest; current -> {kept}")
+    return config.EXIT_OK
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog=config.TOOL,
@@ -142,6 +155,12 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("show", help="list snapshots for a label")
     s.add_argument("-l", "--label", required=True)
     s.set_defaults(func=cmd_show)
+
+    s = sub.add_parser("prune", help="delete all but the N newest snapshots for a label")
+    s.add_argument("-l", "--label", required=True)
+    s.add_argument("-k", "--keep", type=int, required=True,
+                   help="number of newest snapshots to keep (>= 1)")
+    s.set_defaults(func=cmd_prune)
     return p
 
 

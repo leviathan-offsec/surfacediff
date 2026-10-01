@@ -3,11 +3,60 @@ import json
 import pytest
 
 from surfacediff.normalize import Asset
-from surfacediff.store import latest_pair, list_snapshots, load, snap
+from surfacediff.store import latest_pair, list_snapshots, load, prune, snap
 
 
 def make(n=3):
     return [Asset("host", f"host{i}.example.com") for i in range(n)]
+
+
+def test_prune_keeps_newest_and_deletes_rest(tmp_path):
+    for n in (1, 2, 3, 4, 5):
+        snap(str(tmp_path), "subs", make(n))
+    deleted, kept = prune(str(tmp_path), "subs", 2)
+    assert len(deleted) == 3
+    remaining = list_snapshots(str(tmp_path), "subs")
+    assert len(remaining) == 2
+    assert kept == remaining[-1]
+
+
+def test_prune_keeps_newest_data_not_oldest(tmp_path):
+    """The surviving snapshots must be the newest ones, by asset count."""
+    for n in (1, 2, 3, 4, 5):
+        snap(str(tmp_path), "subs", make(n))
+    prune(str(tmp_path), "subs", 2)
+    data = load(str(tmp_path), "subs", "current")
+    assert len(data["records"]) == 5
+
+
+def test_prune_repoints_current_so_diff_still_works(tmp_path):
+    for n in (1, 2, 3, 4):
+        snap(str(tmp_path), "subs", make(n))
+    prune(str(tmp_path), "subs", 1)
+    ptr = (tmp_path / "subs" / "current").read_text().strip()
+    assert (tmp_path / "subs" / ptr).exists(), "pointer must not dangle"
+    assert len(load(str(tmp_path), "subs", "current")["records"]) == 4
+
+
+def test_prune_refuses_keep_below_one(tmp_path):
+    for n in (1, 2, 3):
+        snap(str(tmp_path), "subs", make(n))
+    with pytest.raises(ValueError):
+        prune(str(tmp_path), "subs", 0)
+    assert len(list_snapshots(str(tmp_path), "subs")) == 3, "nothing may be deleted"
+
+
+def test_prune_keeps_all_when_keep_exceeds_count(tmp_path):
+    for n in (1, 2):
+        snap(str(tmp_path), "subs", make(n))
+    deleted, _ = prune(str(tmp_path), "subs", 99)
+    assert deleted == []
+    assert len(list_snapshots(str(tmp_path), "subs")) == 2
+
+
+def test_prune_on_empty_label_errors(tmp_path):
+    with pytest.raises(ValueError):
+        prune(str(tmp_path), "nothing-here", 5)
 
 
 def test_snap_writes_pointer_and_meta(tmp_path):
