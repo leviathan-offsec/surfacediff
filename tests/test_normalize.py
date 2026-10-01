@@ -35,6 +35,26 @@ def test_naabu_json_becomes_port():
     assert a.attrs["ip"] == "1.2.3.4"
 
 
+def test_httpx_bare_input_falls_back_to_host():
+    """httpx omits `url` on some hits; `input` is then a bare hostname.
+
+    Regression: this line was routed to the naabu adapter (port asset, all
+    httpx attrs dropped) or dropped entirely, so status/title flips on those
+    hosts never produced a diff.
+    """
+    line = ('{"input":"a.example.com","host":"a.example.com","status_code":200,'
+            '"title":"A","port":443,"tech":["nginx"]}')
+    a, warn = parse_line(line)
+    assert warn is None
+    assert a.kind == "host" and a.key == "host|a.example.com"
+    assert a.attrs["status_code"] == 200 and a.attrs["title"] == "A"
+
+
+def test_httpx_url_still_wins_over_host_fallback():
+    a, _ = parse_line('{"url":"https://a.example.com","host":"a.example.com","status_code":200}')
+    assert a.kind == "url" and a.key == "url|https://a.example.com"
+
+
 def test_comments_and_blanks_skipped():
     assert parse_line("") == (None, None)
     assert parse_line("# comment") == (None, None)

@@ -71,14 +71,25 @@ def _looks_like_host(s: str) -> bool:
 
 
 def _from_httpx(doc: dict) -> Asset | None:
+    """httpx -json line.
+
+    httpx omits `url` for some hits (e.g. a host that only answered on 443 with
+    no request line captured) and then only `input` is present. `input` is often
+    a BARE hostname ("a.example.com"), which _clean_url rejects (no netloc).
+    Falling back to `host` keeps those assets in the snapshot instead of
+    silently dropping the one field the tool exists to diff.
+    """
     url = doc.get("url") or doc.get("input")
-    if not url:
-        return None
-    canonical = _clean_url(str(url))
-    if not canonical:
-        return None
-    attrs = {k: doc[k] for k in config.HTTPX_ATTRS if doc.get(k) not in (None, "", [])}
-    return Asset("url", canonical, attrs)
+    if url:
+        canonical = _clean_url(str(url))
+        if canonical:
+            attrs = {k: doc[k] for k in config.HTTPX_ATTRS if doc.get(k) not in (None, "", [])}
+            return Asset("url", canonical, attrs)
+    host = doc.get("host") or doc.get("input")
+    if host and _looks_like_host(str(host)):
+        attrs = {k: doc[k] for k in config.HTTPX_ATTRS if doc.get(k) not in (None, "", [])}
+        return Asset("host", str(host).lower().rstrip("."), attrs)
+    return None
 
 
 def _from_naabu(doc: dict) -> Asset | None:
