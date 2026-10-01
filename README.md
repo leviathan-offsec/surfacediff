@@ -18,7 +18,7 @@
 
 ---
 
-## ⚡ Why surfacediff?
+## Why surfacediff?
 
 ProjectDiscovery and modern recon frameworks give you outstanding scanners — `subfinder`, `httpx`, `naabu`, `dnsx`. But they all lack the crucial layer: **state over time**.
 
@@ -31,7 +31,7 @@ ProjectDiscovery and modern recon frameworks give you outstanding scanners — `
 
 ---
 
-## 🏗️ Architecture & Pipeline Flow
+## Architecture & Pipeline Flow
 
 ```mermaid
 flowchart LR
@@ -66,7 +66,7 @@ flowchart LR
 
 ---
 
-## 🚀 Quickstart
+## Quickstart
 
 ### Installation
 
@@ -119,7 +119,7 @@ surfacediff show -l web
 
 ---
 
-## 🔍 Input Adapters (Zero Configuration)
+## Input Adapters (Zero Configuration)
 
 `surfacediff` parses line-delimited streams automatically:
 
@@ -132,7 +132,7 @@ surfacediff show -l web
 
 ---
 
-## ⏰ Automated Cron & Alerting Workflows
+## Automated Cron & Alerting Workflows
 
 Because `surfacediff diff` exits with code **1** on changes and code **0** when nothing changed, continuous monitoring is a 1-liner:
 
@@ -190,7 +190,7 @@ jobs:
 
 ---
 
-## 📦 Command Reference
+## Command Reference
 
 ```text
 surfacediff [OPTIONS] COMMAND [ARGS]...
@@ -219,18 +219,18 @@ Global Options:
 
 ---
 
-## ⚡ The Leviathan Ecosystem
+## The Leviathan Ecosystem
 
 `surfacediff` is part of the **Leviathan Offensive Tooling Suite**:
 
-* 🔍 **[surfacediff](https://github.com/leviathan-offsec/surfacediff)** · Immutable content-addressed snapshotting and perimeter delta diffing.
-* 🚀 **[HostageLVX](https://github.com/leviathan-offsec/HostageLVX)** · High-speed dangling DNS and subdomain takeover engine in Go.
-* 🐺 **[FenrirLVX](https://github.com/leviathan-offsec/FenrirLVX)** · High-speed Go CLI for WordPress/CMS auditing & offline CVE correlation.
-* ⚖️ **[leviathan-core](https://github.com/leviathan-offsec/leviathan-core)** · Contract-enforced vulnerability risk scoring kernel (CVSS/EPSS/KEV).
-* 🤖 **[agy-mcp](https://github.com/leviathan-offsec/agy-mcp)** · Hardened Model Context Protocol (FastMCP) server for AI coding assistants.
+* **[surfacediff](https://github.com/leviathan-offsec/surfacediff)** - Immutable content-addressed snapshotting and perimeter delta diffing.
+* **[HostageLVX](https://github.com/leviathan-offsec/HostageLVX)** - High-speed dangling DNS and subdomain takeover engine in Go.
+* **[FenrirLVX](https://github.com/leviathan-offsec/FenrirLVX)** - High-speed Go CLI for WordPress/CMS auditing & offline CVE correlation.
+* **[leviathan-core](https://github.com/leviathan-offsec/leviathan-core)** - Contract-enforced vulnerability risk scoring kernel (CVSS/EPSS/KEV).
+* **[agy-mcp](https://github.com/leviathan-offsec/agy-mcp)** - Hardened Model Context Protocol (FastMCP) server for AI coding assistants.
 
 ---
 
-## 📄 License
+## License
 
 Licensed under the **MIT License**. Created & maintained by [@cyeezy08](https://github.com/cyeezy08) for [Leviathan OffSec](https://leviathan.ac).
